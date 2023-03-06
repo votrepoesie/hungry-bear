@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>feed the hungry bear</title>
+  <title>feed the hungry bear~</title>
   <link rel="stylesheet" href="style.css">
 
   <!-- import libraries -->
@@ -20,6 +20,7 @@
   <div class="item food"></div>
   <div class="item water"></div>
   <div class="item toy"></div>
+  <div class="text">feed the hungry bear</div>
   
 <script>
 
@@ -81,19 +82,44 @@
   //game portion
   //QUESTION: IS IT POSSIBLE TO CREATE A GIF-OVER INSTEAD OF MOUSE-OVER?
 
-  function changeColor (e) {e.target.style.backgroundColor = 'white'}
-  function changeBack (e) {e.target.style.backgroundColor = 'black'}
+  // function changeColor (e) {e.target.style.backgroundColor = 'white'}
+  // function changeBack (e) {e.target.style.backgroundColor = 'black'}
   
-function setup2 () {
-    const items = document.querySelectorAll('.item')
-    for (let i = 0; i < boxes.length; i++) {
-      items[i].addEventListener('mouseover', changeColor)
-      items[i].addEventListener('mouseout', changeBack)
-    }
-}
+  // function setup2 () {
+  //   const items = document.querySelectorAll('.item')
+  //   for (let i = 0; i < boxes.length; i++) {
+  //     items[i].addEventListener('mouseover', changeColor)
+  //     items[i].addEventListener('mouseout', changeBack)
+  //   }
+  // }
+  
+  // window.addEventListener('load', setup2)
 
-window.addEventListener('load', setup2)
 
+
+
+
+  //checking for overlap 
+  //img.style.left & top are constantly changing
+  //
+
+
+  const food = document.querySelector('.food')
+  const foodRect = food.getBoundingClientRect();
+
+  console.log(foodRect)
+
+
+  // const overlap = !(gifRect.right < divRect.left || 
+  //                   gifRect.left > divRect.right || 
+  //                   gifRect.bottom < divRect.top || 
+  //                   gifRect.top > divRect.bottom);
+
+  // if (overlap) {
+  //   food.style.backgroundColor = 'white'
+  // } else {
+  //   food.style.backgroundColor = 'red'
+  // }
 
 </script>
 

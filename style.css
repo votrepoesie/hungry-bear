@@ -51,5 +51,13 @@ video {
     left: 500px;
 }
 
+.text {
+    color: pink;
+    position: absolute;
+    left: 800px;
+    top: 50px;
+    font-size: 50px;
+}
+
 
 
