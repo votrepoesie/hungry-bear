@@ -1,2 +1,4 @@
 # nose-tracking
-◕ ◞ ◕ This project was made using https://netnet.studio
+
+this project uses tensorflow's blazepose to track movement 
+it's a simple website game too!

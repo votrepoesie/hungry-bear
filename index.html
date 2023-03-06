@@ -1,16 +1,30 @@
-<!-- These are the libraries i copy + pasted from the BlazePose documentation page -->
-<!-- https://github.com/tensorflow/tfjs-models/tree/master/pose-detection/src/blazepose_mediapipe -->
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
-<script>
-  /* global poseDetection */
-  let gif, detector, video
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>what's on my nose?</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- import libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
+</head>
+
+<body>
+
+  <div id="playground"></div>
+  <div class="item food"></div>
+  <div class="item water"></div>
+  <div class="item toy"></div>
   
-  // this function creates a video element which streams our webcam feed and adds it to the page
-  // we asked OpenAI's codex to write this function (which we then refactored a bit)
-  // https://platform.openai.com/codex-javascript-sandbox
+<script>
+
+  let gif, detector, video
+
   async function addVideo() {
     const video = document.createElement('video')
     video.setAttribute('autoplay', '')
@@ -22,59 +36,66 @@
     return video
   }
   
-  // this function loads the AI model
   async function setupModel () {
-    // here we pick which pre-trained model we want to use
     const model = poseDetection.SupportedModels.BlazePose
-    // here we setup some "configuration" settings
     const detectorConfig = {
       runtime: 'mediapipe',
       solutionPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/pose'
     }
-    // we combine the two to create the AI "detctor" function
     const detector = await poseDetection.createDetector(model, detectorConfig)
     return detector
   }
   
-  // our draw function (ie animation loop)
   async function draw () {
-    // we first use the detector AI function to predict our "pose" based on the video frame
 		const poses = await detector.estimatePoses(video)
-    if (poses.length > 0) { // if the AI detects poses...
-      // we grab the first keypoint from the first pose detected, ie our "nose"
-      // we can see which keypoints refer to which part of the pose in the docs:
-      // https://github.com/tensorflow/tfjs-models/tree/master/pose-detection#blazepose-keypoints-used-in-mediapipe-blazepose
+    if (poses.length > 0) { 
     	const nose = poses[0].keypoints[0]
-      // nose object looks like: { x: number, y: number, z: number, score: number, name: "nose" }
       console.log(nose) 
-      // so we use the nose.x and nose.y to change the position of the gif
-    	gif.style.left = nose.x - gif.width / 2.5 + 'px'
-      gif.style.top = nose.y - gif.height / 2.5 + 'px'
+    	gif.style.left = nose.x * 1.2 + 'px'
+      gif.style.top = nose.y * 2 + 'px'
     }
     requestAnimationFrame(draw)
   }
 
-
   async function setup () {
-    // we create a gif element
     gif = document.createElement('img')
     gif.src = 'bear.gif'
     gif.style.position = 'absolute'
-    gif.style.width = '200px'
+    gif.style.width = '70px'
     document.body.appendChild(gif)
     
-    // then we create our video element
     video = await addVideo()
-    // then we create our AI function
   	detector = await setupModel()
-    // then we log it to make sure the model loaded correctly
     console.log('detector ready', detector)
   
-    // then we wait a second before starting our animation loop
     setTimeout(draw, 1000)  // this is a hack!
     // ...to get around the "race conditions" issue
   }
-
+  
   window.addEventListener('load', setup)
 
+
+
+
+
+  //game portion
+  //QUESTION: IS IT POSSIBLE TO CREATE A GIF-OVER INSTEAD OF MOUSE-OVER?
+
+  function changeColor (e) {e.target.style.backgroundColor = 'white'}
+  function changeBack (e) {e.target.style.backgroundColor = 'black'}
+  
+function setup2 () {
+    const items = document.querySelectorAll('.item')
+    for (let i = 0; i < boxes.length; i++) {
+      items[i].addEventListener('mouseover', changeColor)
+      items[i].addEventListener('mouseout', changeBack)
+    }
+}
+
+window.addEventListener('load', setup2)
+
+
 </script>
+
+</body>
+</html>
