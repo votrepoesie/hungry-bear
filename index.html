@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>feed the hungry bear~</title>
   <link rel="stylesheet" href="style.css">
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
+
   <!-- import libraries -->
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
+
 </head>
 
 <body>
@@ -20,22 +26,15 @@
   <div class="item food"></div>
   <div class="item water"></div>
   <div class="item toy"></div>
-  <div class="text">stay 1 ft away from camera <br> move your right hand</div>
+  <div class="text">stay 1 ft away from camera <br> move your right hand 👋 </div>
   <div id="yummy">yummy yummy</div>
+  <div id="slurpy">slurpy slurpy</div>
+  <div id="grass">I don't eat grass!</div>
+  <img id="player" src="player.gif">
+  <img id="nokia" src="nokia.gif">
+  <img id="browser" src="browser.gif">
 
 <script>
-
-  //collision
-  function rangeIntersect (min0, max0, min1, max1) {
-		return Math.max(min0, max0) >= Math.min(min1, max1) &&
-      Math.min(min0, max0) <= Math.max(min1, max1)
-  }
-  
-  function rectIntersect (r0, r1) {
-    return rangeIntersect(r0.x, r0.x + r0.width, r1.x, r1.x + r1.width) &&
-      rangeIntersect(r0.y, r0.y + r0.height, r1.y, r1.y + r1.height)
-  }
-
 
   //nose-tracking
 
@@ -77,14 +76,18 @@
       const toy = document.querySelector('.toy')
 
       const yummy = document.getElementById('yummy')
+      const slurpy = document.getElementById('slurpy')
+      const grass = document.getElementById('grass')
 
 
       if (left < 380 && left > 260 && top > 550 && top < 680) {
         water.style.backgroundColor = 'black'
         water.style.border = 'rgb(118, 228, 255) 2px dotted'
         water.style.transition = '0.5s'
+        slurpy.style.visibility = 'visible'
       } else {
         water.style.backgroundColor = 'rgb(118, 228, 255)'
+        slurpy.style.visibility = 'hidden'
       }
 
 
@@ -103,8 +106,10 @@
         toy.style.backgroundColor = 'black'
         toy.style.border = 'rgb(145, 255, 123) 2px dotted'
         toy.style.transition = '0.5s'
+        grass.style.visibility = 'visible'
       } else {
         toy.style.backgroundColor = 'rgb(145, 255, 123)'
+        grass.style.visibility = 'hidden'
       }
     }
 
@@ -123,7 +128,7 @@
   	detector = await setupModel()
     console.log('detector ready', detector)
   
-    setTimeout(draw, 1000)  // this is a hack!
+    setTimeout(draw, 500)  // this is a hack!
     // ...to get around the "race conditions" issue
   }
   
