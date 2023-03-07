@@ -20,9 +20,24 @@
   <div class="item food"></div>
   <div class="item water"></div>
   <div class="item toy"></div>
-  <div class="text">feed the hungry bear</div>
-  
+  <div class="text">stay 1 ft away from camera <br> move your right hand</div>
+  <div id="yummy">yummy yummy</div>
+
 <script>
+
+  //collision
+  function rangeIntersect (min0, max0, min1, max1) {
+		return Math.max(min0, max0) >= Math.min(min1, max1) &&
+      Math.min(min0, max0) <= Math.max(min1, max1)
+  }
+  
+  function rectIntersect (r0, r1) {
+    return rangeIntersect(r0.x, r0.x + r0.width, r1.x, r1.x + r1.width) &&
+      rangeIntersect(r0.y, r0.y + r0.height, r1.y, r1.y + r1.height)
+  }
+
+
+  //nose-tracking
 
   let gif, detector, video
 
@@ -46,15 +61,53 @@
     const detector = await poseDetection.createDetector(model, detectorConfig)
     return detector
   }
-  
+
   async function draw () {
 		const poses = await detector.estimatePoses(video)
     if (poses.length > 0) { 
-    	const nose = poses[0].keypoints[0]
-      console.log(nose) 
-    	gif.style.left = nose.x * 1.2 + 'px'
+    	const nose = poses[0].keypoints[20]
+    	gif.style.left = nose.x + 'px'
       gif.style.top = nose.y * 2 + 'px'
+
+      const left = nose.x 
+      const top = nose.y * 2
+      //console.log(left, top)
+      const water = document.querySelector('.water')
+      const food = document.querySelector('.food')
+      const toy = document.querySelector('.toy')
+
+      const yummy = document.getElementById('yummy')
+
+
+      if (left < 380 && left > 260 && top > 550 && top < 680) {
+        water.style.backgroundColor = 'black'
+        water.style.border = 'rgb(118, 228, 255) 2px dotted'
+        water.style.transition = '0.5s'
+      } else {
+        water.style.backgroundColor = 'rgb(118, 228, 255)'
+      }
+
+
+      if (left > 50 && left < 170 && top > 230 && top < 350) {
+        food.style.backgroundColor = 'black'
+        food.style.border = 'rgb(255, 118, 180) 2px dotted'
+        food.style.transition = '0.5s'
+        yummy.style.visibility = 'visible'
+      } else {
+        food.style.backgroundColor = 'rgb(255, 118, 180)'
+        yummy.style.visibility = 'hidden'
+      }
+
+
+      if (left > 450 && left < 570 && top > 50 && top < 170) {
+        toy.style.backgroundColor = 'black'
+        toy.style.border = 'rgb(145, 255, 123) 2px dotted'
+        toy.style.transition = '0.5s'
+      } else {
+        toy.style.backgroundColor = 'rgb(145, 255, 123)'
+      }
     }
+
     requestAnimationFrame(draw)
   }
 
@@ -62,9 +115,10 @@
     gif = document.createElement('img')
     gif.src = 'bear.gif'
     gif.style.position = 'absolute'
-    gif.style.width = '70px'
+    gif.style.width = '100px'
+    gif.setAttribute('id', 'bear')
     document.body.appendChild(gif)
-    
+   
     video = await addVideo()
   	detector = await setupModel()
     console.log('detector ready', detector)
@@ -74,52 +128,6 @@
   }
   
   window.addEventListener('load', setup)
-
-
-
-
-
-  //game portion
-  //QUESTION: IS IT POSSIBLE TO CREATE A GIF-OVER INSTEAD OF MOUSE-OVER?
-
-  // function changeColor (e) {e.target.style.backgroundColor = 'white'}
-  // function changeBack (e) {e.target.style.backgroundColor = 'black'}
-  
-  // function setup2 () {
-  //   const items = document.querySelectorAll('.item')
-  //   for (let i = 0; i < boxes.length; i++) {
-  //     items[i].addEventListener('mouseover', changeColor)
-  //     items[i].addEventListener('mouseout', changeBack)
-  //   }
-  // }
-  
-  // window.addEventListener('load', setup2)
-
-
-
-
-
-  //checking for overlap 
-  //img.style.left & top are constantly changing
-  //
-
-
-  const food = document.querySelector('.food')
-  const foodRect = food.getBoundingClientRect();
-
-  console.log(foodRect)
-
-
-  // const overlap = !(gifRect.right < divRect.left || 
-  //                   gifRect.left > divRect.right || 
-  //                   gifRect.bottom < divRect.top || 
-  //                   gifRect.top > divRect.bottom);
-
-  // if (overlap) {
-  //   food.style.backgroundColor = 'white'
-  // } else {
-  //   food.style.backgroundColor = 'red'
-  // }
 
 </script>
 
